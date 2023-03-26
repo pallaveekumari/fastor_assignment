@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const { employeeController } = require("./Routes/EmployeeRoutes");
 const { connection } = require("./Config/db");
+const { userController } = require("./Routes/UserEnquiryRoutes");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 7500;
@@ -12,7 +13,7 @@ app.get("/", (req, res) => {
   res.send("welcome to fastor");
 });
 app.use("/employee", employeeController);
-
+app.use("/user",userController)
 app.listen(PORT, async () => {
   try {
     await connection;
