@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const { EmployeeModel } = require("../Models/EmployeeModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const employeeController = Router();
 
 employeeController.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
-  
+
   const employee = await EmployeeModel.find({ email });
   try {
     if (employee.length != 0) {
@@ -30,6 +32,29 @@ employeeController.post("/signup", async (req, res) => {
           });
         }
       });
+    }
+  } catch (err) {
+    res.status(400).json({ msg: "Something went wrong", error: err });
+  }
+});
+
+employeeController.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+      const employee = await EmployeeModel.find({ email });
+    if (employee.length == 0) {
+      res.status(400).json({ msg: "User doesnot exist please Signup" });
+    } else {
+      const matchPassword = await bcrypt.compare(
+        password,
+        employee[0].password
+      );
+      if (!matchPassword) {
+        res.status(400).json({ msg: "Incorrect Password" });
+      } else {
+        let token = jwt.sign({ email }, process.env.SECRET);
+        res.status(200).json({ msg: "login Successfull", token: token });
+      }
     }
   } catch (err) {
     res.status(400).json({ msg: "Something went wrong", error: err });
