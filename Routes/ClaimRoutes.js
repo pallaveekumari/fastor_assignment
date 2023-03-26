@@ -12,8 +12,8 @@ claimController.get("/unclaimleads", async (req, res) => {
   }
 });
 
-claimController.post("/claimleads", async (req, res) => {
-  const { token } = req.body;
+claimController.get("/claimleads", async (req, res) => {
+  const  token  = req.headers.authorization.split(" ")[1]
   try {
     jwt.verify(token, process.env.SECRET, async (err, decoded) => {
       if (err) {
@@ -30,7 +30,34 @@ claimController.post("/claimleads", async (req, res) => {
   }
 });
 
-
+claimController.post("/claimuser", async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const { email } = req.body;
+  const user = await UserEnquiryModel.find({ email });
+  try {
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+      if (err) {
+        res.status(400).json({ msg: "Something went wrong" });
+      } else {
+        const users = await UserEnquiryModel.findOneAndUpdate(
+          {
+            email: user[0]?.email,
+          },
+          {
+            counsellor_email: decoded.email,
+          }
+        );
+        if (users) {
+          res.status(200).json({ msg: "claimed successfully" });
+        } else {
+          res.status(400).json({ msg: "claimed failed" });
+        }
+      }
+    });
+  } catch (err) {
+    res.status(400).json({ msg: "Something went wrong" });
+  }
+});
 
 module.exports = {
   claimController,
