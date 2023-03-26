@@ -3,6 +3,8 @@ const { UserEnquiryModel } = require("../Models/UserEnquiryModel");
 const jwt = require("jsonwebtoken");
 const claimController = Router();
 
+// ● API to fetch unclaimed leads
+
 claimController.get("/unclaimleads", async (req, res) => {
   try {
     const users = await UserEnquiryModel.find({ counsellor_email: null });
@@ -12,8 +14,10 @@ claimController.get("/unclaimleads", async (req, res) => {
   }
 });
 
+//● API to fetch leads claimed by logged in users.
+
 claimController.get("/claimleads", async (req, res) => {
-  const  token  = req.headers.authorization.split(" ")[1]
+  const token = req.headers.authorization.split(" ")[1];
   try {
     jwt.verify(token, process.env.SECRET, async (err, decoded) => {
       if (err) {
@@ -29,6 +33,8 @@ claimController.get("/claimleads", async (req, res) => {
     res.status(400).json({ msg: "Something went wrong", error: err });
   }
 });
+
+//● API to claim leads.
 
 claimController.post("/claimuser", async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];

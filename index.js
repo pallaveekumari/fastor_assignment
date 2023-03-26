@@ -14,8 +14,8 @@ app.get("/", (req, res) => {
   res.send("welcome to fastor");
 });
 app.use("/employee", employeeController);
-app.use("/user",userController)
-app.use("/leads",claimController)
+app.use("/user", userController);
+app.use("/leads", claimController);
 app.listen(PORT, async () => {
   try {
     await connection;

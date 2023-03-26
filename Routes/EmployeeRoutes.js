@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const employeeController = Router();
 
+// ● API for Employee login/register.
+
 employeeController.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -41,7 +43,7 @@ employeeController.post("/signup", async (req, res) => {
 employeeController.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-      const employee = await EmployeeModel.find({ email });
+    const employee = await EmployeeModel.find({ email });
     if (employee.length == 0) {
       res.status(400).json({ msg: "User doesnot exist please Signup" });
     } else {

@@ -2,6 +2,8 @@ const { Router } = require("express");
 const { UserEnquiryModel } = require("../Models/UserEnquiryModel");
 const userController = Router();
 
+// ● Public form API must be accessible without any authentication.
+
 userController.post("/enquiryform", async (req, res) => {
   const { name, email, course_interest } = req.body;
   try {
@@ -18,10 +20,6 @@ userController.post("/enquiryform", async (req, res) => {
     res.status(400).json({ msg: "Something went wrong", error: err });
   }
 });
-
-
-
-
 
 module.exports = {
   userController,
